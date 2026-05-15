@@ -1,0 +1,1270 @@
+
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>FLE Pack PRO · Mode iniciació (FIX quiz) · PDF únic + reprendre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root{
+      --sage:#3d7a52; --sage-l:#e6f2eb; --sage-m:#a8cfb8;
+      --rose:#b85a6e; --rose-l:#fcedf1; --rose-m:#e8a8b8;
+      --gold:#c49a35; --gold-l:#fdf4e0;
+      --sky:#3d6fa8; --sky-l:#e8f0fb;
+      --bg:#f8f6f1; --card:#fff; --txt:#1a1d24; --muted:#6c6f7c;
+      --border:#e4e0d6; --shadow:0 10px 30px rgba(0,0,0,.08);
+      --r:18px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt)}
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background:
+        radial-gradient(ellipse 70% 50% at 12% 12%, #e6f2eb66 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 88% 88%, #fcedf166 0%, transparent 55%),
+        radial-gradient(ellipse 55% 45% at 75% 10%, #fdf4e055 0%, transparent 55%);
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:14px 14px 44px;position:relative;z-index:1}
+
+    /* Start */
+    .start{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e6f2eb,#fdf4e0)}
+    .startCard{background:#fff;border:1.5px solid var(--border);border-radius:22px;box-shadow:0 18px 60px rgba(0,0,0,.12);padding:24px 20px;width:min(780px, calc(100% - 24px));text-align:center}
+    .badge{display:inline-flex;gap:8px;align-items:center;background:var(--sage);color:#fff;padding:6px 14px;border-radius:999px;font-size:.72rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    h1{font-family:'Playfair Display',serif;font-size:2.1rem;margin:12px 0 6px}
+    h1 em{color:var(--sage);font-style:italic}
+    .sub{color:var(--muted);line-height:1.5;margin:0 auto 12px;max-width:680px}
+    .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .bigBtn{border:0;border-radius:14px;padding:12px 18px;font-weight:900;cursor:pointer}
+    .primary{background:var(--sage);color:#fff;box-shadow:0 12px 22px rgba(61,122,82,.22)}
+    .ghost{background:#fff;border:1.5px solid var(--border);color:var(--muted)}
+    .tog{display:flex;gap:16px;justify-content:center;margin-top:12px;color:var(--muted);font-weight:800;font-size:.86rem}
+    .tog input{transform:scale(1.15)}
+
+    /* HUD */
+    .hud{position:sticky;top:10px;z-index:50;display:flex;justify-content:center;margin:12px 0 10px}
+    .hudBox{display:flex;gap:10px;align-items:center;background:#fff;border:1.5px solid var(--border);box-shadow:0 10px 24px rgba(0,0,0,.06);border-radius:999px;padding:8px 12px;flex-wrap:wrap}
+    .chip{display:inline-flex;gap:8px;align-items:center;border:1.5px solid var(--border);border-radius:999px;padding:6px 10px;font-weight:900;font-size:.78rem;color:var(--muted)}
+    .chip b{color:var(--sage)}
+    .chipBtn{cursor:pointer;user-select:none}
+
+    /* Progress */
+    .progressWrap{margin:14px 0 4px}
+    .progressLine{position:relative;height:10px;background:var(--border);border-radius:999px;overflow:hidden}
+    .progressFill{height:100%;width:0%;background:linear-gradient(90deg,var(--sage),var(--gold));transition:width .35s ease}
+    .steps{display:flex;justify-content:space-between;gap:8px;margin-top:10px}
+    .step{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid var(--border);background:#fff;border-radius:999px;padding:7px 10px;font-weight:900;font-size:.78rem;color:var(--muted)}
+    .step.done{border-color:var(--sage-m);background:var(--sage-l);color:var(--sage)}
+    .step.active{border-color:var(--sage);background:#fff;color:var(--sage)}
+
+    /* Tabs */
+    .menu{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+    .tab{border:1.5px solid var(--border);background:#fff;border-radius:999px;padding:9px 14px;font-weight:900;cursor:pointer;color:var(--muted)}
+    .tab.active{background:var(--sage);border-color:var(--sage);color:#fff}
+    .tab.locked{opacity:.45;cursor:not-allowed}
+
+    /* Cards */
+    .card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);padding:18px;margin:14px 0}
+    .secTitle{font-family:'Playfair Display',serif;font-size:1.35rem;margin-bottom:6px}
+    .secSub{color:var(--muted);font-size:.88rem;line-height:1.55}
+
+    /* Inputs */
+    .inp{flex:1;min-width:180px;border:1.5px solid var(--border);border-radius:12px;padding:10px 12px;font-size:.98rem;outline:none}
+    .inp:focus{border-color:var(--sage)}
+
+    /* Vocab */
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:12px}
+    .vCard{border:1.5px solid var(--border);border-radius:14px;background:#fff;padding:12px;cursor:pointer;transition:.15s}
+    .vCard:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,.08)}
+    .vTop{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .vTag{font-size:.7rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+    .vEmoji{font-size:1.7rem}
+    .vFr{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;margin-top:6px}
+    .vCa{display:none;color:var(--muted);font-size:.85rem;margin-top:4px}
+    .vCard.open .vCa{display:block}
+    .tts{border:1.5px solid var(--sage-m);background:var(--sage-l);color:var(--sage);border-radius:10px;padding:3px 8px;font-weight:900;cursor:pointer}
+
+    /* Dictée */
+    .dicteeList{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+    .dicteeItem{display:flex;gap:10px;flex-wrap:wrap;align-items:center;border:1.5px solid var(--border);border-radius:14px;padding:10px 12px;background:#fff}
+    .n{width:30px;height:30px;border-radius:50%;background:var(--sky-l);color:var(--sky);display:flex;align-items:center;justify-content:center;font-weight:900}
+    .play{background:var(--sky);color:#fff;border:0;border-radius:10px;padding:9px 12px;font-weight:900;cursor:pointer}
+    .ok{background:var(--sage-l)!important;border-color:var(--sage-m)!important}
+    .bad{background:var(--rose-l)!important;border-color:var(--rose-m)!important}
+
+    /* Quiz */
+    .qMeta{display:flex;justify-content:space-between;align-items:end;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .pill{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border-radius:999px;border:1.5px solid var(--border);background:#fff;font-weight:900;font-size:.78rem;color:var(--muted)}
+    .qChoices{display:flex;flex-direction:column;gap:9px;margin-top:10px}
+    .qBtn{border:1.5px solid var(--border);border-radius:14px;background:#fff;padding:11px 12px;font-weight:800;cursor:pointer;text-align:left}
+    .qBtn:hover{border-color:var(--sage)}
+    .qBtn.correct{background:var(--sage-l);border-color:var(--sage)}
+    .qBtn.wrong{background:var(--rose-l);border-color:var(--rose)}
+    .qBtn.disabled{opacity:.78;cursor:default}
+    .qBtn.elim{opacity:.25;text-decoration:line-through}
+
+    /* Redacció */
+    textarea{width:100%;border:1.5px solid var(--border);border-radius:14px;padding:12px;font-family:inherit;font-size:1rem;outline:none}
+    textarea:focus{border-color:var(--sage)}
+
+    .writingPanel{margin-top:12px;border:1.5px solid var(--border);border-radius:14px;padding:12px;background:#fff}
+    .miniRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    .statPill{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border-radius:999px;border:1.5px solid var(--border);font-weight:900;font-size:.78rem;color:var(--muted)}
+    .statPill.good{border-color:var(--sage-m);background:var(--sage-l);color:var(--sage)}
+    .statPill.warn{border-color:#e8ca85;background:var(--gold-l);color:#6d4f00}
+    .statPill.bad{border-color:var(--rose-m);background:var(--rose-l);color:var(--rose)}
+
+    .checklist{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin-top:10px}
+    .check{border:1.5px solid var(--border);border-radius:12px;padding:8px 10px;background:#fff;font-weight:800;color:var(--muted)}
+    .check.ok{border-color:var(--sage-m);background:var(--sage-l);color:var(--sage)}
+
+    .helpBox{margin-top:10px;border:1.5px dashed var(--border);border-radius:14px;padding:12px;background:#fff}
+    .helpHeader{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .helpHeader b{color:var(--sage)}
+    .chipBtn2{border:1.5px solid var(--border);background:#fff;border-radius:999px;padding:7px 10px;font-weight:900;cursor:pointer;color:var(--muted)}
+    .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .tag{border:1.5px solid var(--border);border-radius:999px;padding:6px 10px;font-weight:900;font-size:.78rem;cursor:pointer;background:#fff;color:var(--muted)}
+    .tag:hover{border-color:var(--sage);color:var(--sage)}
+
+    /* Buttons */
+    .btnRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center}
+    .btn{border:0;border-radius:12px;padding:10px 16px;font-weight:900;cursor:pointer}
+    .btnPrimary{background:var(--sage);color:#fff}
+    .btnGhost{background:#fff;border:1.5px solid var(--border);color:var(--muted)}
+
+    /* Toast */
+    #toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:rgba(26,29,36,.92);color:#fff;padding:10px 14px;border-radius:999px;font-weight:900;font-size:.85rem;z-index:10001;box-shadow:0 10px 24px rgba(0,0,0,.18);opacity:0;transition:opacity .2s ease, transform .2s ease}
+
+    /* Confetti */
+    .confetti{position:fixed;inset:0;pointer-events:none;z-index:10000;overflow:hidden}
+    .confetti i{position:absolute;top:-12px;width:10px;height:16px;opacity:.9;animation:fall 950ms linear forwards}
+    @keyframes fall{to{transform:translateY(110vh) rotate(240deg);opacity:0}}
+
+    /* Modals */
+    .modalBack{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:9999}
+    .modal{background:#fff;border:1.5px solid var(--border);border-radius:18px;box-shadow:0 18px 60px rgba(0,0,0,.18);width:min(880px, calc(100% - 24px));max-height:84vh;overflow:auto;padding:18px}
+    .modalHead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .modalHead h3{font-family:'Playfair Display',serif;font-size:1.25rem}
+    .xBtn{border:1.5px solid var(--border);background:#fff;border-radius:10px;padding:6px 10px;font-weight:900;cursor:pointer}
+
+    .badgeGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:12px}
+    .bCard{border:1.5px solid var(--border);border-radius:14px;padding:12px;background:#fff}
+    .bCard .bName{font-weight:900;margin-top:4px}
+    .bCard .bSmall{color:var(--muted);font-size:.82rem;margin-top:3px;line-height:1.35}
+    .bCard.locked{opacity:.45}
+
+    .foot{color:var(--muted);text-align:center;font-size:.78rem;margin:18px 0 28px}
+  </style>
+</head>
+<body>
+
+  <div class="start" id="start">
+    <div class="startCard">
+      <div class="badge">🇫🇷 A1 · Mode iniciació · FIX</div>
+      <h1>FLE <em>Pack complet</em></h1>
+      <div class="sub">Aquesta versió està <b>blindada</b>: el <b>quiz ja es desplega</b>. Redacció per iniciació: frases simples, <b>sense connectors</b>. Guardat automàtic + reprendre + PDF únic al final.</div>
+
+      <div class="row" style="margin-top:10px">
+        <input id="startName" class="inp" placeholder="Nom i cognoms *" style="max-width:340px"/>
+        <input id="startGroup" class="inp" placeholder="Grup / classe *" style="max-width:240px"/>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <button class="bigBtn primary" id="startBtn" disabled>Comença →</button>
+        <button class="bigBtn ghost" id="continueBtn" style="display:none">Continua on ho havies deixat →</button>
+      </div>
+
+      <div class="row" style="margin-top:8px">
+        <button class="bigBtn ghost" id="resetBtn">Reiniciar (esborra progrés)</button>
+      </div>
+
+      <div class="tog">
+        <label><input type="checkbox" id="soundToggle" checked> Sons</label>
+        <label><input type="checkbox" id="motionToggle" checked> Animacions</label>
+      </div>
+
+      <div class="sub" id="resumeInfo" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <div class="wrap" id="app" style="display:none">
+
+    <div class="hud">
+      <div class="hudBox">
+        <span class="chip">⭐ XP: <b id="hudXp">0</b></span>
+        <span class="chip">🧩 Nivell: <b id="hudLevel">1</b></span>
+        <span class="chip">🏁 Tema: <b id="hudTheme">—</b></span>
+        <span class="chip">👤 <b id="hudStudent">—</b></span>
+        <span class="chip">✅ Fases: <b id="hudDone">0/3</b></span>
+        <span class="chip chipBtn" id="saveExit">💾 Desa i surt</span>
+        <span class="chip chipBtn" id="openBadges">🏆 Insígnies: <b id="hudBadges">0</b></span>
+      </div>
+    </div>
+
+    <div class="progressWrap">
+      <div class="progressLine"><div class="progressFill" id="progressFill"></div></div>
+      <div class="steps">
+        <div class="step" id="step-famille">1 · Família</div>
+        <div class="step" id="step-corps">2 · Cos</div>
+        <div class="step" id="step-physique">3 · Descripció</div>
+        <div class="step" id="step-final">FINAL · PDF</div>
+      </div>
+    </div>
+
+    <div class="menu" id="themeMenu"></div>
+
+    <section class="card" id="sec-top">
+      <div class="secTitle" id="themeTitle">—</div>
+      <div class="secSub" id="themeIntro">—</div>
+      <div class="secSub" id="themeStatus" style="margin-top:6px"></div>
+    </section>
+
+    <section class="card" id="sec-vocab">
+      <div class="secTitle">1) Vocabulari</div>
+      <div class="secSub">Clica una targeta per veure traducció. Prem 🔊 per escoltar.</div>
+      <div class="grid" id="vocabGrid"></div>
+    </section>
+
+    <section class="card" id="sec-dictee">
+      <div class="secTitle">2) Dictée</div>
+      <div class="secSub">Escolta i escriu. Objectiu: ≥70%.</div>
+      <div class="dicteeList" id="dicteeArea"></div>
+      <div class="btnRow">
+        <button class="btn btnPrimary" id="dicteeCheck">Comprovar</button>
+        <button class="btn btnGhost" id="dicteeNew">Nova ronda</button>
+        <div class="secSub" id="dicteeScore">0 / 0</div>
+      </div>
+      <div class="secSub" id="dicteeFb"></div>
+    </section>
+
+    <section class="card" id="sec-quiz">
+      <div class="secTitle">3) Quiz</div>
+      <div class="secSub">8 preguntes. Objectiu: ≥5/8.</div>
+      <div class="qMeta">
+        <div class="pill" id="quizMeta">Pregunta 1/8</div>
+        <button class="btn btnGhost" id="quizHint">Pista 50/50 (2)</button>
+      </div>
+      <div class="secTitle" style="font-size:1.15rem;margin-top:12px" id="quizQ"></div>
+      <div class="qChoices" id="quizChoices"></div>
+      <div class="btnRow">
+        <button class="btn btnPrimary" id="quizNext" style="display:none">Següent</button>
+        <button class="btn btnGhost" id="quizRebuild">Recrear quiz</button>
+      </div>
+      <div class="secSub" id="quizFb"></div>
+    </section>
+
+    <section class="card" id="sec-redac">
+      <div class="secTitle">4) Redacció (Mode iniciació)</div>
+      <div class="secSub" id="redacPrompt">Objectiu: frases simples i clares (sense connectors).</div>
+      <textarea id="redacText" rows="7" placeholder="Escriu aquí en francès…"></textarea>
+
+      <div class="writingPanel">
+        <div class="miniRow">
+          <span class="statPill" id="statWords">📝 Paraules: 0/20</span>
+          <span class="statPill" id="statSent">🔹 Frases: 0/3</span>
+          <span class="statPill" id="statUnique">🧠 Diferents: 0/10</span>
+          <span class="statPill" id="statGood">✅ Frases bones: 0/2</span>
+          <span class="statPill" id="statRepeat">♻️ Repeticions: OK</span>
+        </div>
+        <div class="checklist" id="checklist"></div>
+        <div class="secSub" id="writingFb" style="margin-top:10px"></div>
+        <div class="secSub" id="redacFb" style="margin-top:6px"></div>
+
+        <div class="helpBox" id="helpBox">
+          <div class="helpHeader">
+            <div><b>Ajuda ràpida</b> · frases model (clic per inserir)</div>
+            <button class="chipBtn2" id="toggleHelp">Amaga ajuda</button>
+          </div>
+          <div class="secSub" id="modelSent" style="margin-top:10px"></div>
+          <div class="secSub" style="margin-top:10px"><b>Frases model del tema:</b></div>
+          <div class="tags" id="extraTags"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="foot">Mode iniciació FIX · Guardat automàtic + reprendre · PDF únic al final</div>
+  </div>
+
+  <!-- FINAL MODAL -->
+  <div class="modalBack" id="finalBack" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modalHead">
+        <h3>🎉 Has completat el pack!</h3>
+        <button class="xBtn" id="closeFinal">Tancar</button>
+      </div>
+      <div class="secSub" style="margin-top:8px">Ara ja pots descarregar <b>un únic PDF</b> amb els 3 mini-projectes (resultats + redaccions).</div>
+
+      <div class="card" style="margin-top:12px">
+        <div class="secSub"><b>Nom i grup</b> (es poden editar)</div>
+        <div class="row" style="margin-top:10px">
+          <input id="stuName" class="inp" placeholder="Nom i cognoms" style="max-width:340px"/>
+          <input id="stuGroup" class="inp" placeholder="Grup / classe" style="max-width:240px"/>
+        </div>
+        <div class="btnRow">
+          <button class="btn btnPrimary" id="makePdf">Descarregar PDF únic</button>
+          <button class="btn btnGhost" id="resetAll">Esborrar progrés</button>
+        </div>
+        <div class="secSub" id="pdfFb" style="margin-top:8px"></div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <div class="secSub"><b>Resum</b></div>
+        <div class="secSub" id="summary" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BADGES MODAL -->
+  <div class="modalBack" id="badgesBack" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modalHead">
+        <h3>🏆 Insígnies</h3>
+        <button class="xBtn" id="closeBadges">Tancar</button>
+      </div>
+      <div class="secSub" style="margin-top:6px">Completa dictées, quizzes i redaccions per tema.</div>
+      <div class="badgeGrid" id="badgeGrid"></div>
+    </div>
+  </div>
+
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+  <div id="toast" aria-live="polite"></div>
+
+<script>
+  // ===================
+  // FIXES CRÍTICS (aquí estava el problema del quiz)
+  // ===================
+  function shuffle(arr){
+    const a = Array.isArray(arr) ? [...arr] : [];
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function normFR(s){
+    return String(s||'')
+      .toLowerCase()
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g,'')
+      .replace(/[’']/g,' ')
+      .replace(/\s+/g,' ');
+  }
+
+  // ===================
+  // CONFIG MODE INICIACIÓ
+  // ===================
+  const MIN_WORDS=20, MIN_SENTENCES=3, MIN_UNIQUE=10, MAX_REPEAT=6, MIN_GOOD=2;
+
+  const FR_STOP = new Set([
+    'je','j','tu','il','elle','on','nous','vous','ils','elles','me','te','se','m','t','s',
+    'le','la','les','un','une','des','du','de','d','au','aux',
+    'et','ou','mais','donc','or','ni','car',
+    'a','à','en','dans','sur','sous','avec','sans','pour','par','chez',
+    'ce','cet','cette','ces','c','ca','ça','cela',
+    'mon','ma','mes','ton','ta','tes','son','sa','ses','notre','nos','votre','vos','leur','leurs',
+    'est','suis','es','sont','etre','être','avoir','a','as','ont',
+    'ne','pas','plus','tres','très','trop','bien','mal','y'
+  ]);
+
+  const EXTRA_BY_THEME={
+    famille:['Voici ma famille.','Mon père s\'appelle Marc.','Ma mère s\'appelle Anna.','J\'ai un frère.','J\'ai une sœur.','Il y a quatre personnes.','Mon grand-père est ici.','Ma grand-mère est gentille.'],
+    corps:['J\'ai deux yeux.','J\'ai un nez.','J\'ai une bouche.','J\'ai deux oreilles.','Mon bras est grand.','Ma main est petite.','J\'ai mal à la tête.','J\'ai mal au ventre.'],
+    physique:['Il est grand.','Elle est petite.','Il est jeune.','Elle est mince.','Il a les cheveux bruns.','Elle a les cheveux blonds.','Il porte des lunettes.','Elle a les yeux bleus.']
+  };
+
+  const THEMES={
+    famille:{name:'Família',intro:'Aprèn els membres de la família.',redac:'Frases simples: «Mon père…», «J\'ai…», «Voici…»',vocab:[
+      {fr:'le père',ca:'el pare',emoji:'👨'},{fr:'la mère',ca:'la mare',emoji:'👩'},{fr:'les parents',ca:'els pares',emoji:'👨‍👩‍👧'},
+      {fr:'le frère',ca:'el germà',emoji:'👦'},{fr:'la sœur',ca:'la germana',emoji:'👧'},{fr:'le grand-père',ca:'l’avi',emoji:'👴'},
+      {fr:'la grand-mère',ca:'l’àvia',emoji:'👵'},{fr:'le fils',ca:'el fill',emoji:'🧒'},{fr:'la fille',ca:'la filla',emoji:'👧'},
+      {fr:"l'oncle",ca:"l’oncle",emoji:'🧔'},{fr:'la tante',ca:'la tia',emoji:'👩‍🦱'},{fr:'le cousin',ca:'el cosí',emoji:'👨‍👦'},
+      {fr:'la cousine',ca:'la cosina',emoji:'👩‍👧'},{fr:'le bébé',ca:'el nadó',emoji:'👶'},{fr:'le mari',ca:'el marit',emoji:'🤵'},
+      {fr:'la femme',ca:'la dona',emoji:'👰'},{fr:'le neveu',ca:'el nebot',emoji:'🧑‍🍼'},{fr:'la nièce',ca:'la neboda',emoji:'🧑‍🍼'},
+      {fr:'le petit-fils',ca:'el nét',emoji:'👦'},{fr:'la petite-fille',ca:'la néta',emoji:'👧'}
+    ]},
+    corps:{name:'Cos',intro:'Aprèn les parts del cos en francès.',redac:'Frases simples: «J\'ai…», «Mon/ma… est…»',vocab:[
+      {fr:'la tête',ca:'el cap',emoji:'🧠'},{fr:'les yeux',ca:'els ulls',emoji:'👀'},{fr:'le nez',ca:'el nas',emoji:'👃'},
+      {fr:'la bouche',ca:'la boca',emoji:'👄'},{fr:'les oreilles',ca:'les orelles',emoji:'👂'},{fr:'le bras',ca:'el braç',emoji:'💪'},
+      {fr:'la main',ca:'la mà',emoji:'✋'},{fr:'la jambe',ca:'la cama',emoji:'🦵'},{fr:'le pied',ca:'el peu',emoji:'🦶'},
+      {fr:'les cheveux',ca:'els cabells',emoji:'💇'},{fr:'les dents',ca:'les dents',emoji:'🦷'},{fr:'le ventre',ca:'la panxa',emoji:'🍐'},
+      {fr:'le genou',ca:'el genoll',emoji:'🦿'},{fr:'le cou',ca:'el coll',emoji:'🧣'},{fr:'le dos',ca:"l'esquena",emoji:'🧍'},
+      {fr:'le coude',ca:'el colze',emoji:'🦾'},{fr:"l'épaule",ca:"l'espatlla",emoji:'🤷'},{fr:'les doigts',ca:'els dits',emoji:'🖐️'},
+      {fr:"l'ongle",ca:"l'ungla",emoji:'💅'},{fr:'le cœur',ca:'el cor',emoji:'❤️'}
+    ]},
+    physique:{name:'Descripció',intro:'Descriu una persona (A1).',redac:'Frases simples: «Il/Elle est…», «Il/Elle a…», «Il/Elle porte…»',vocab:[
+      {fr:'grand',ca:'alt',emoji:'📏'},{fr:'petit',ca:'baix',emoji:'📏'},{fr:'mince',ca:'prim',emoji:'🧍'},
+      {fr:'gros',ca:'gras',emoji:'🧍'},{fr:'les cheveux',ca:'els cabells',emoji:'💇'},{fr:'les yeux',ca:'els ulls',emoji:'👀'},
+      {fr:'blond',ca:'ros',emoji:'🟡'},{fr:'brun',ca:'morè',emoji:'🟤'},{fr:'jeune',ca:'jove',emoji:'🧒'},
+      {fr:'des lunettes',ca:'ulleres',emoji:'👓'},{fr:'une barbe',ca:'barba',emoji:'🧔'},{fr:'une moustache',ca:'bigoti',emoji:'👨'},
+      {fr:'musclé',ca:'musculós',emoji:'🏋️'},{fr:'roux',ca:'roig',emoji:'🟠'},{fr:'chauve',ca:'calb',emoji:'🧑‍🦲'},
+      {fr:'de taille moyenne',ca:"d'alçada mitjana",emoji:'📏'},{fr:'long',ca:'llarg',emoji:'📏'},{fr:'court',ca:'curt',emoji:'✂️'},
+      {fr:'bouclé',ca:'arrissat',emoji:'🌀'},{fr:'raide',ca:'llis',emoji:'🧴'}
+    ]}
+  };
+  const THEME_ORDER=['famille','corps','physique'];
+
+  const BADGES=[
+    {key:'famille_dictee',emoji:'🎧',name:'Família · Dictée 70%',desc:'Aconsegueix ≥70% a la dictée de Família.'},
+    {key:'famille_quiz',emoji:'🏆',name:'Família · Quiz 5/8',desc:'Aconsegueix ≥5/8 al quiz de Família.'},
+    {key:'famille_redac',emoji:'✍️',name:'Família · Redacció',desc:'Completa la redacció amb frases simples.'},
+    {key:'corps_dictee',emoji:'🎧',name:'Cos · Dictée 70%',desc:'Aconsegueix ≥70% a la dictée del Cos.'},
+    {key:'corps_quiz',emoji:'🏆',name:'Cos · Quiz 5/8',desc:'Aconsegueix ≥5/8 al quiz del Cos.'},
+    {key:'corps_redac',emoji:'✍️',name:'Cos · Redacció',desc:'Completa la redacció amb frases simples.'},
+    {key:'physique_dictee',emoji:'🎧',name:'Descripció · Dictée 70%',desc:'Aconsegueix ≥70% a la dictée de Descripció.'},
+    {key:'physique_quiz',emoji:'🏆',name:'Descripció · Quiz 5/8',desc:'Aconsegueix ≥5/8 al quiz de Descripció.'},
+    {key:'physique_redac',emoji:'✍️',name:'Descripció · Redacció',desc:'Completa la redacció amb frases simples.'},
+    {key:'pack_master',emoji:'🌟',name:'Pack Master',desc:'Completa Dictée + Quiz + Redacció als 3 temes.'},
+    {key:'xp200',emoji:'⭐',name:'200 XP',desc:'Arriba a 200 XP global.'}
+  ];
+
+  const STORAGE_KEY='fle_pack_pro_iniciacio_fix_quiz_v1';
+  const state={
+    started:false,
+    theme:'famille',
+    lastSection:'sec-top',
+    xp:0,
+    level:1,
+    sound:true,
+    motion:true,
+    badges:[],
+    student:{name:'',group:''},
+    perTheme:{
+      famille:{dictee:{items:[],answers:{},ok:0,total:0,pct:0},quiz:{questions:[],idx:0,correct:0,hints:2,elims:{}},redac:{text:'',wc:0,sc:0,unique:0,good:0,worstRepeat:0,done:false}},
+      corps:{dictee:{items:[],answers:{},ok:0,total:0,pct:0},quiz:{questions:[],idx:0,correct:0,hints:2,elims:{}},redac:{text:'',wc:0,sc:0,unique:0,good:0,worstRepeat:0,done:false}},
+      physique:{dictee:{items:[],answers:{},ok:0,total:0,pct:0},quiz:{questions:[],idx:0,correct:0,hints:2,elims:{}},redac:{text:'',wc:0,sc:0,unique:0,good:0,worstRepeat:0,done:false}}
+    },
+    _finalShown:false
+  };
+
+  function save(){
+    try{localStorage.setItem(STORAGE_KEY, JSON.stringify(state));}catch(e){}
+    updateHUD();
+    updateProgressUI();
+    updateSummary();
+    renderBadges();
+    updateUnlocks();
+    updateStartScreen();
+  }
+
+  function load(){
+    try{
+      const raw=localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      const s=JSON.parse(raw);
+      Object.assign(state,s);
+      state.badges = state.badges || [];
+      state.student = Object.assign({name:'',group:''}, state.student||{});
+      state.started = !!state.started;
+      state.perTheme = state.perTheme || {};
+      for(const k of THEME_ORDER){
+        state.perTheme[k]=state.perTheme[k]||{dictee:{},quiz:{},redac:{}};
+        state.perTheme[k].dictee = Object.assign({items:[],answers:{},ok:0,total:0,pct:0}, state.perTheme[k].dictee||{});
+        state.perTheme[k].quiz = Object.assign({questions:[],idx:0,correct:0,hints:2,elims:{}}, state.perTheme[k].quiz||{});
+        state.perTheme[k].quiz.elims = state.perTheme[k].quiz.elims || {};
+        state.perTheme[k].redac = Object.assign({text:'',wc:0,sc:0,unique:0,good:0,worstRepeat:0,done:false}, state.perTheme[k].redac||{});
+      }
+      if(typeof state.sound!=='boolean') state.sound=true;
+      if(typeof state.motion!=='boolean') state.motion=true;
+      if(!state.level) state.level=1;
+    }catch(e){}
+  }
+
+  function resetAll(){ localStorage.removeItem(STORAGE_KEY); location.reload(); }
+
+  // Toast + confetti + sfx
+  let toastTimer;
+  function toast(msg){
+    const el=document.getElementById('toast');
+    el.textContent=msg; el.style.opacity='1'; el.style.transform='translateX(-50%) translateY(-2px)';
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>{el.style.opacity='0'; el.style.transform='translateX(-50%) translateY(6px)';},1200);
+  }
+
+  function confetti(){
+    if(!state.motion) return;
+    const root=document.getElementById('confetti');
+    root.innerHTML='';
+    const colors=['#3d7a52','#c49a35','#b85a6e','#3d6fa8','#fff'];
+    for(let i=0;i<44;i++){
+      const p=document.createElement('i');
+      p.style.left=(Math.random()*100)+'vw';
+      p.style.background=colors[Math.floor(Math.random()*colors.length)];
+      p.style.animationDuration=(650+Math.random()*700)+'ms';
+      p.style.width=(6+Math.random()*8)+'px';
+      p.style.height=(10+Math.random()*16)+'px';
+      root.appendChild(p);
+    }
+    setTimeout(()=>root.innerHTML='',1200);
+  }
+
+  let audioCtx;
+  function sfx(type){
+    if(!state.sound) return;
+    try{
+      if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+      const t0=audioCtx.currentTime;
+      const o=audioCtx.createOscillator();
+      const g=audioCtx.createGain();
+      o.connect(g); g.connect(audioCtx.destination);
+      g.gain.value=0.0001;
+      const env=(peak,dur)=>{g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(peak,t0+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);};
+      if(type==='good'){o.type='triangle';o.frequency.setValueAtTime(740,t0);env(0.05,0.18);} 
+      if(type==='bad'){o.type='sawtooth';o.frequency.setValueAtTime(180,t0);env(0.04,0.22);} 
+      if(type==='win'){o.type='sine';o.frequency.setValueAtTime(660,t0);o.frequency.exponentialRampToValueAtTime(990,t0+0.14);env(0.05,0.28);} 
+      o.start(); o.stop(t0+0.3);
+    }catch(e){}
+  }
+
+  function speakFR(text){
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='fr-FR'; u.rate=0.92;
+    window.speechSynthesis.speak(u);
+  }
+
+  // Progress / unlocks
+  function themeDone(k){
+    return state.badges.includes(`${k}_dictee`) && state.badges.includes(`${k}_quiz`) && state.badges.includes(`${k}_redac`);
+  }
+  function doneCount(){ return THEME_ORDER.filter(themeDone).length; }
+  function unlockedIndex(){
+    if(themeDone('famille') && themeDone('corps') && themeDone('physique')) return 3;
+    if(themeDone('famille') && themeDone('corps')) return 2;
+    if(themeDone('famille')) return 1;
+    return 0;
+  }
+
+  function updateUnlocks(){
+    const idx = unlockedIndex();
+    document.querySelectorAll('[data-theme]').forEach(btn=>{
+      const tIndex = THEME_ORDER.indexOf(btn.dataset.theme);
+      btn.classList.toggle('locked', tIndex>idx);
+    });
+    document.getElementById('themeStatus').innerHTML = themeDone(state.theme)
+      ? '✅ Mini-projecte completat. Ja pots passar al següent.'
+      : `Objectiu: Dictée ≥70% + Quiz ≥5/8 + Redacció (≥${MIN_WORDS} paraules i ≥${MIN_GOOD} frases bones).`;
+
+    if(idx===3 && !state._finalShown){
+      state._finalShown=true;
+      openFinal();
+      toast('🎉 Has completat el pack!');
+      confetti();
+      sfx('win');
+    }
+
+    document.getElementById('hudDone').textContent = `${doneCount()}/3`;
+  }
+
+  function updateProgressUI(){
+    const cnt=doneCount();
+    const pct=(cnt/3)*75 + (cnt===3?25:0);
+    document.getElementById('progressFill').style.width = `${pct}%`;
+
+    const s1=document.getElementById('step-famille');
+    const s2=document.getElementById('step-corps');
+    const s3=document.getElementById('step-physique');
+    const sf=document.getElementById('step-final');
+    [s1,s2,s3,sf].forEach(el=>{el.classList.remove('active'); el.classList.remove('done');});
+    if(themeDone('famille')) s1.classList.add('done');
+    if(themeDone('corps')) s2.classList.add('done');
+    if(themeDone('physique')) s3.classList.add('done');
+    if(cnt===3) sf.classList.add('done');
+    ({famille:s1,corps:s2,physique:s3}[state.theme]||s1).classList.add('active');
+    if(cnt===3) sf.classList.add('active');
+  }
+
+  // XP
+  function levelFromXP(xp){ return Math.max(1, Math.floor((xp||0)/70)+1); }
+  function addXP(n){
+    const before = state.level;
+    state.xp = Math.max(0,(state.xp||0)+n);
+    state.level = levelFromXP(state.xp);
+    if(state.xp>=200) award('xp200');
+    if(state.level>before){ toast(`⬆️ Nivell ${state.level}!`); confetti(); sfx('win'); }
+    save();
+  }
+
+  function award(key){
+    if(state.badges.includes(key)) return;
+    state.badges.push(key);
+    toast('🏆 Insígnia desbloquejada!');
+    confetti(); sfx('win');
+    save();
+  }
+
+  function checkPackMaster(){
+    const all = THEME_ORDER.every(t=>state.badges.includes(`${t}_dictee`) && state.badges.includes(`${t}_quiz`) && state.badges.includes(`${t}_redac`));
+    if(all) award('pack_master');
+  }
+
+  function updateHUD(){
+    document.getElementById('hudXp').textContent = state.xp||0;
+    document.getElementById('hudLevel').textContent = state.level||1;
+    document.getElementById('hudTheme').textContent = THEMES[state.theme].name;
+    document.getElementById('hudBadges').textContent = (state.badges||[]).length;
+    const nm=(state.student?.name||'').trim();
+    const gr=(state.student?.group||'').trim();
+    document.getElementById('hudStudent').textContent = nm ? (gr? `${nm} · ${gr}`: nm) : '—';
+  }
+
+  // Theme menu
+  function buildThemeMenu(){
+    const menu=document.getElementById('themeMenu');
+    menu.innerHTML='';
+    for(const key of THEME_ORDER){
+      const b=document.createElement('button');
+      b.className='tab' + (key===state.theme?' active':'');
+      b.dataset.theme=key;
+      b.textContent=THEMES[key].name;
+      b.onclick=()=>{
+        const idx=unlockedIndex();
+        const targetIndex=THEME_ORDER.indexOf(key);
+        if(targetIndex>idx){ toast('Primer completa el mini-projecte anterior.'); sfx('bad'); return; }
+        switchTheme(key);
+      };
+      menu.appendChild(b);
+    }
+  }
+
+  function switchTheme(key){
+    state.theme=key;
+    buildThemeMenu();
+    renderTheme();
+    save();
+  }
+
+  // Render
+  function renderTheme(){
+    const t=THEMES[state.theme];
+    document.getElementById('themeTitle').textContent=t.name;
+    document.getElementById('themeIntro').textContent=t.intro;
+    document.getElementById('redacPrompt').textContent = `Objectiu: ${MIN_WORDS} paraules, ${MIN_SENTENCES} frases i ${MIN_GOOD} frases bones. ${t.redac}`;
+    buildVocab();
+    buildDictee(false);
+    buildQuizIfNeeded();
+    loadRedac();
+    updateUnlocks();
+  }
+
+  // Vocab
+  function buildVocab(){
+    const grid=document.getElementById('vocabGrid');
+    grid.innerHTML='';
+    const t=THEMES[state.theme];
+    t.vocab.forEach(item=>{
+      const c=document.createElement('div');
+      c.className='vCard';
+      c.innerHTML=`
+        <div class="vTop"><div class="vTag">${t.name}</div><button class="tts" type="button">🔊</button></div>
+        <div class="vEmoji">${item.emoji||''}</div>
+        <div class="vFr">${item.fr}</div>
+        <div class="vCa">${item.ca}</div>
+      `;
+      c.querySelector('.tts').onclick=(e)=>{e.stopPropagation(); speakFR(item.fr); sfx('good');};
+      c.onclick=()=>{ c.classList.toggle('open'); addXP(2); };
+      grid.appendChild(c);
+    });
+  }
+
+  // Dictée
+  function dicteePool(){ return THEMES[state.theme].vocab.map(v=>v.fr); }
+
+  function buildDictee(newRound){
+    const d = state.perTheme[state.theme].dictee;
+    if(newRound || !d.items || d.items.length===0){
+      d.items = shuffle(dicteePool()).slice(0,8);
+      d.answers = {}; d.ok=0; d.total=d.items.length; d.pct=0;
+      document.getElementById('dicteeFb').textContent='';
+    }
+
+    const area=document.getElementById('dicteeArea');
+    area.innerHTML='';
+
+    d.items.forEach((word,i)=>{
+      const row=document.createElement('div');
+      row.className='dicteeItem';
+      row.dataset.ans=word;
+      row.innerHTML = `
+        <div class="n">${i+1}</div>
+        <button class="play" type="button">Escoltar</button>
+        <input class="inp" placeholder="Escriu…" value="${(d.answers[i]||'').replace(/"/g,'&quot;')}"/>
+        <div class="secSub" id="dres${i}"></div>
+      `;
+      row.querySelector('.play').onclick=()=>{ speakFR(word); sfx('good'); };
+      row.querySelector('.inp').oninput=(e)=>{ d.answers[i]=e.target.value; save(); };
+      area.appendChild(row);
+    });
+
+    document.getElementById('dicteeScore').textContent = `${d.ok||0} / ${d.total||d.items.length}`;
+  }
+
+  function checkDictee(){
+    const d = state.perTheme[state.theme].dictee;
+    const rows=[...document.querySelectorAll('#dicteeArea .dicteeItem')];
+    let ok=0;
+    rows.forEach((row,i)=>{
+      const ans=row.dataset.ans;
+      const inp=row.querySelector('.inp');
+      const good = normFR(inp.value) === normFR(ans);
+      row.classList.remove('ok','bad');
+      if(good){ ok++; row.classList.add('ok'); row.querySelector('#dres'+i).textContent='✓'; }
+      else{ row.classList.add('bad'); row.querySelector('#dres'+i).textContent='→ '+ans; }
+    });
+    d.ok=ok; d.total=rows.length; d.pct=Math.round(ok/rows.length*100);
+    document.getElementById('dicteeScore').textContent = `${ok} / ${rows.length}`;
+
+    if(ok/rows.length>=0.7){
+      document.getElementById('dicteeFb').textContent=`✅ Dictée completada (${d.pct}%).`;
+      addXP(22);
+      award(`${state.theme}_dictee`);
+      checkPackMaster();
+      sfx('win');
+      if(themeDone(state.theme)) moveToNextThemeIfAny();
+    }else{
+      document.getElementById('dicteeFb').textContent=`❌ Cal mínim 70%. Ara: ${d.pct}%.`;
+      sfx('bad');
+    }
+    save();
+  }
+
+  // Quiz
+  function buildQuizIfNeeded(){
+    const q = state.perTheme[state.theme].quiz;
+    if(!q.questions || q.questions.length!==8) rebuildQuiz();
+    else renderQuizQ();
+  }
+
+  function rebuildQuiz(){
+    const q = state.perTheme[state.theme].quiz;
+    const items = THEMES[state.theme].vocab;
+    const poolFR = items.map(x=>x.fr);
+    const chosen = shuffle(items).slice(0, Math.min(8, items.length));
+    q.questions = chosen.map(item=>{
+      const distractors = shuffle(poolFR.filter(fr=>fr!==item.fr)).slice(0,3);
+      const choices = shuffle([item.fr, ...distractors]);
+      return {prompt:`Com es diu «${item.ca}» en francès?`, a:item.fr, ch:choices};
+    });
+    while(q.questions.length<8) q.questions.push(q.questions[q.questions.length%chosen.length]);
+    q.idx=0; q.correct=0; q.hints=2; q.elims={};
+    document.getElementById('quizFb').textContent='';
+    renderQuizQ();
+    save();
+  }
+
+  function renderQuizQ(){
+    const q = state.perTheme[state.theme].quiz;
+    const total=q.questions.length;
+    const cur=q.questions[q.idx];
+    document.getElementById('quizMeta').textContent = `Pregunta ${q.idx+1}/${total} · Correctes: ${q.correct}`;
+    const hb=document.getElementById('quizHint');
+    hb.textContent = `Pista 50/50 (${q.hints})`;
+    hb.disabled = q.hints<=0;
+
+    document.getElementById('quizQ').textContent = cur.prompt;
+    const div=document.getElementById('quizChoices');
+    div.innerHTML='';
+
+    const eliminated = new Set(q.elims[q.idx] || []);
+
+    cur.ch.forEach(choice=>{
+      const b=document.createElement('button');
+      b.className='qBtn';
+      b.textContent=choice;
+      b.dataset.val=choice;
+      if(eliminated.has(choice)) b.classList.add('elim');
+
+      b.onclick=()=>{
+        if(b.classList.contains('disabled')||b.classList.contains('elim')) return;
+        div.querySelectorAll('.qBtn').forEach(x=>x.classList.add('disabled'));
+        const ok = choice===cur.a;
+        if(ok){
+          b.classList.add('correct');
+          q.correct++;
+          document.getElementById('quizFb').textContent='✅ Correcte!';
+          addXP(9);
+          sfx('good');
+        }else{
+          b.classList.add('wrong');
+          div.querySelectorAll('.qBtn').forEach(x=>{ if(x.dataset.val===cur.a) x.classList.add('correct'); });
+          document.getElementById('quizFb').textContent=`❌ Era: ${cur.a}`;
+          sfx('bad');
+        }
+        document.getElementById('quizNext').style.display='inline-flex';
+        save();
+      };
+      div.appendChild(b);
+    });
+
+    document.getElementById('quizNext').style.display='none';
+  }
+
+  function quizHint(){
+    const q = state.perTheme[state.theme].quiz;
+    if(q.hints<=0) return;
+    const cur=q.questions[q.idx];
+    const wrong = cur.ch.filter(x=>x!==cur.a);
+    const pick2 = shuffle(wrong).slice(0,2);
+    q.elims[q.idx] = Array.from(new Set([...(q.elims[q.idx]||[]), ...pick2]));
+    q.hints--;
+    save();
+    renderQuizQ();
+  }
+
+  function quizNext(){
+    const q = state.perTheme[state.theme].quiz;
+    q.idx++;
+    document.getElementById('quizFb').textContent='';
+
+    if(q.idx>=q.questions.length){
+      const ok = q.correct>=5;
+      document.getElementById('quizFb').textContent = ok ? `🏆 Quiz completat (${q.correct}/8)!` : `Cal ≥5 encerts. Ara: ${q.correct}/8.`;
+      if(ok){
+        addXP(24);
+        award(`${state.theme}_quiz`);
+        checkPackMaster();
+        sfx('win');
+        confetti();
+        if(themeDone(state.theme)) moveToNextThemeIfAny();
+      }else{
+        sfx('bad');
+      }
+      document.getElementById('quizNext').style.display='none';
+      document.getElementById('quizHint').disabled=true;
+      save();
+      return;
+    }
+    renderQuizQ();
+    save();
+  }
+
+  // Redacció (iniciació)
+  function tokenize2(text){
+    return (text||'').toLowerCase().replace(/['’]/g,' ').replace(/[^a-zàâçéèêëîïôöùûüÿœ\s-]/gi,' ').replace(/\s+/g,' ').trim().split(' ').filter(Boolean);
+  }
+
+  function splitSentences(text){
+    const cleaned=(text||'').trim();
+    if(!cleaned) return [];
+    return cleaned.split(/(?<=[.!?])\s+/).map(s=>s.trim()).filter(Boolean);
+  }
+
+  function countSentences(text){
+    return (text||'').trim().split(/[.!?]+/).map(s=>s.trim()).filter(Boolean).length;
+  }
+
+  function repetitionStats(tokens){
+    const freq={};
+    for(const w of tokens){
+      if(FR_STOP.has(w)) continue;
+      freq[w]=(freq[w]||0)+1;
+    }
+    const entries=Object.entries(freq).sort((a,b)=>b[1]-a[1]);
+    const worst = entries.length? entries[0][1] : 0;
+    return {worst, top: entries.slice(0,5), unique: Object.keys(freq).length};
+  }
+
+  function vocabSetForTheme(themeKey){
+    const items = THEMES[themeKey].vocab.map(x=>x.fr.toLowerCase());
+    const words=new Set();
+    for(const it of items){
+      const toks = it.replace(/['’]/g,' ').split(/\s+/).filter(Boolean);
+      for(const t of toks){
+        if(['le','la','les','des','du','de','d','un','une'].includes(t)) continue;
+        words.add(t);
+      }
+    }
+    return words;
+  }
+
+  const VOCAB_WORDS={famille:vocabSetForTheme('famille'),corps:vocabSetForTheme('corps'),physique:vocabSetForTheme('physique')};
+
+  function isGoodSentence(sentence, themeKey){
+    const s=(sentence||'').toLowerCase();
+    let hasStructure=false;
+    if(themeKey==='famille') hasStructure = /\b(mon|ma|mes)\b/.test(s) || /\bvoici\b/.test(s) || /\bil y a\b/.test(s) || /\bs\s*appelle\b/.test(s) || /\bj\s*ai\b/.test(s);
+    if(themeKey==='corps') hasStructure = /\bj\s*ai\b/.test(s) || /\bj\s*ai mal\b/.test(s) || /\bmon\b|\bma\b/.test(s);
+    if(themeKey==='physique') hasStructure = ( /\bil\b/.test(s) || /\belle\b/.test(s) ) && ( /\best\b/.test(s) || /\ba\b/.test(s) || /\bporte\b/.test(s) );
+    if(!hasStructure) return false;
+
+    const toks=tokenize2(s);
+    for(const t of toks){
+      if(VOCAB_WORDS[themeKey].has(t)) return true;
+    }
+    if(themeKey==='physique' && /\bgrand\b|\bpetit\b|\bmince\b|\bgros\b|\bjeune\b|\bblond\b|\bbrun\b|\broux\b/.test(s)) return true;
+    return false;
+  }
+
+  function countGoodSentences(text, themeKey){
+    return splitSentences(text).filter(s=>isGoodSentence(s, themeKey)).length;
+  }
+
+  function setPill(el, stateName){ el.classList.remove('good','warn','bad'); el.classList.add(stateName); }
+
+  function buildChecklist(items){
+    const box=document.getElementById('checklist');
+    box.innerHTML='';
+    for(const it of items){
+      const d=document.createElement('div');
+      d.className='check'+(it.ok?' ok':'');
+      d.textContent=(it.ok?'✅ ':'⬜ ')+it.label;
+      box.appendChild(d);
+    }
+  }
+
+  function refreshWritingHelp(){
+    document.getElementById('modelSent').textContent = THEMES[state.theme].redac;
+    const ebox=document.getElementById('extraTags');
+    ebox.innerHTML='';
+    for(const e of (EXTRA_BY_THEME[state.theme]||[])){
+      const t=document.createElement('div');
+      t.className='tag';
+      t.textContent=e;
+      t.onclick=()=>{ insertAtCursor(document.getElementById('redacText'), e); evaluateWriting(false); };
+      ebox.appendChild(t);
+    }
+  }
+
+  function insertAtCursor(textarea, text){
+    const start=textarea.selectionStart||0;
+    const end=textarea.selectionEnd||0;
+    const before=textarea.value.slice(0,start);
+    const after=textarea.value.slice(end);
+    const spacer=(before && !before.endsWith(' ') && !text.startsWith(' ')) ? ' ' : '';
+    const spacer2=(text && !text.endsWith(' ') && after && !after.startsWith(' ') && !after.startsWith('\n')) ? ' ' : '';
+    textarea.value = before + spacer + text + spacer2 + after;
+    const pos=(before+spacer+text).length;
+    textarea.selectionStart=textarea.selectionEnd=pos;
+    textarea.focus();
+  }
+
+  function evaluateWriting(silent){
+    const ta=document.getElementById('redacText');
+    const text=(ta.value||'').trim();
+
+    const tokens=tokenize2(text);
+    const wc=tokens.length;
+    const sc=countSentences(text);
+    const rep=repetitionStats(tokens);
+    const good=countGoodSentences(text, state.theme);
+
+    const r=state.perTheme[state.theme].redac;
+    r.text=text; r.wc=wc; r.sc=sc; r.unique=rep.unique; r.good=good; r.worstRepeat=rep.worst;
+
+    const pW=document.getElementById('statWords');
+    pW.textContent=`📝 Paraules: ${wc}/${MIN_WORDS}`;
+    setPill(pW, wc>=MIN_WORDS ? 'good' : (wc>=MIN_WORDS*0.7 ? 'warn' : 'bad'));
+
+    const pS=document.getElementById('statSent');
+    pS.textContent=`🔹 Frases: ${sc}/${MIN_SENTENCES}`;
+    setPill(pS, sc>=MIN_SENTENCES ? 'good' : (sc>=2 ? 'warn' : 'bad'));
+
+    const pU=document.getElementById('statUnique');
+    pU.textContent=`🧠 Diferents: ${rep.unique}/${MIN_UNIQUE}`;
+    setPill(pU, rep.unique>=MIN_UNIQUE ? 'good' : (rep.unique>=MIN_UNIQUE*0.7 ? 'warn' : 'bad'));
+
+    const pG=document.getElementById('statGood');
+    pG.textContent=`✅ Frases bones: ${good}/${MIN_GOOD}`;
+    setPill(pG, good>=MIN_GOOD ? 'good' : (good>=1 ? 'warn' : 'bad'));
+
+    const pR=document.getElementById('statRepeat');
+    pR.textContent = rep.worst ? `♻️ Repeticions: màx ${rep.worst}` : '♻️ Repeticions: —';
+    setPill(pR, (rep.worst==0 || rep.worst<=MAX_REPEAT) ? 'good' : 'bad');
+
+    buildChecklist([
+      {label:`Mínim ${MIN_WORDS} paraules`, ok: wc>=MIN_WORDS},
+      {label:`Mínim ${MIN_SENTENCES} frases (posa punts)`, ok: sc>=MIN_SENTENCES},
+      {label:`Mínim ${MIN_UNIQUE} paraules diferents`, ok: rep.unique>=MIN_UNIQUE},
+      {label:`Mínim ${MIN_GOOD} frases bones (model + vocab)`, ok: good>=MIN_GOOD},
+      {label:`Evitar repetir massa (màx ${MAX_REPEAT})`, ok: rep.worst==0 || rep.worst<=MAX_REPEAT}
+    ]);
+
+    // Feedback
+    const fb=document.getElementById('writingFb');
+    let msg='';
+    if(!text) msg='Escriu 3 frases curtes. Usa les frases model (clicables).';
+    else{
+      if(wc<MIN_WORDS) msg += `• Falta longitud: afegeix ${MIN_WORDS-wc} paraules.<br>`;
+      if(sc<MIN_SENTENCES) msg += `• Falten frases: posa punts (.) per separar.<br>`;
+      if(good<MIN_GOOD) msg += `• Falten frases bones: copia una frase model i canvia una paraula.<br>`;
+      if(rep.unique<MIN_UNIQUE) msg += `• Varia vocabulari: afegeix paraules del tema.<br>`;
+      if(rep.worst>MAX_REPEAT) msg += `• Massa repetició: canvia paraula o frase.<br>`;
+      if(!msg) msg='✅ Molt bé! Frases clares i correctes per nivell iniciació.';
+    }
+    fb.innerHTML=msg;
+
+    const okAll = wc>=MIN_WORDS && sc>=MIN_SENTENCES && rep.unique>=MIN_UNIQUE && good>=MIN_GOOD && (rep.worst==0 || rep.worst<=MAX_REPEAT);
+
+    if(okAll && !r.done){
+      r.done=true;
+      document.getElementById('redacFb').textContent='✅ Redacció (iniciació) completada!';
+      addXP(26);
+      award(`${state.theme}_redac`);
+      checkPackMaster();
+      sfx('win');
+      confetti();
+      if(themeDone(state.theme)) moveToNextThemeIfAny();
+    }
+    if(!okAll){
+      r.done=false;
+      document.getElementById('redacFb').textContent='';
+    }
+
+    if(!silent) save();
+  }
+
+  function loadRedac(){
+    const r=state.perTheme[state.theme].redac;
+    const ta=document.getElementById('redacText');
+    ta.value=r.text||'';
+    refreshWritingHelp();
+    evaluateWriting(true);
+  }
+
+  function moveToNextThemeIfAny(){
+    updateUnlocks();
+    const idx=THEME_ORDER.indexOf(state.theme);
+    if(idx>=0 && idx<2){
+      const next=THEME_ORDER[idx+1];
+      toast(`✅ ${THEMES[state.theme].name} completat. Passa a: ${THEMES[next].name}`);
+      setTimeout(()=>switchTheme(next), 450);
+    }else if(idx===2){
+      updateUnlocks();
+    }
+  }
+
+  // PDF
+  function todayStr(){
+    const d=new Date();
+    return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+  }
+
+  function generatePdf(){
+    let name=(document.getElementById('stuName').value||'').trim();
+    let group=(document.getElementById('stuGroup').value||'').trim();
+    if(!name) name=(state.student?.name||'').trim();
+    if(!group) group=(state.student?.group||'').trim();
+
+    if(!name){ document.getElementById('pdfFb').textContent='Escriu el teu NOM.'; return; }
+    if(!group){ document.getElementById('pdfFb').textContent='Escriu el teu GRUP.'; return; }
+
+    if(!window.jspdf || !window.jspdf.jsPDF){
+      document.getElementById('pdfFb').textContent='No s\'ha carregat jsPDF (cal Internet).';
+      return;
+    }
+
+    state.student.name=name; state.student.group=group; save();
+
+    const {jsPDF}=window.jspdf;
+    const doc=new jsPDF({unit:'pt',format:'a4'});
+    const W=doc.internal.pageSize.getWidth();
+    const H=doc.internal.pageSize.getHeight();
+
+    doc.setFillColor(61,122,82); doc.rect(0,0,W,54,'F');
+    doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(16);
+    doc.text('FLE Pack PRO · Resultats (Família + Cos + Descripció)',38,34);
+
+    let y=78;
+    doc.setFillColor(230,242,235); doc.setDrawColor(168,207,184);
+    doc.roundedRect(38,y,W-76,78,10,10,'FD');
+
+    doc.setTextColor(61,122,82); doc.setFontSize(9);
+    doc.text('ALUMNE/A',54,y+20);
+    doc.setTextColor(26,29,36); doc.setFontSize(16); doc.setFont('helvetica','bold');
+    doc.text(name,54,y+42);
+
+    doc.setFont('helvetica','normal'); doc.setTextColor(26,29,36); doc.setFontSize(12);
+    doc.text(`Grup: ${group}`,54,y+62);
+    doc.text(`Data: ${todayStr()}`,W-180,y+62);
+
+    y += 104;
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(61,122,82);
+    doc.text('Resum global',38,y); y+=16;
+    doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(26,29,36);
+    doc.text(`XP: ${state.xp||0} · Nivell: ${state.level||1} · Insígnies: ${(state.badges||[]).length}`,38,y); y+=18;
+
+    for(const tkey of THEME_ORDER){
+      const t=THEMES[tkey];
+      const d=state.perTheme[tkey].dictee;
+      const q=state.perTheme[tkey].quiz;
+      const r=state.perTheme[tkey].redac;
+
+      doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(61,122,82);
+      doc.text(t.name,38,y); y+=14;
+      doc.setFont('helvetica','normal'); doc.setFontSize(10.5); doc.setTextColor(26,29,36);
+      doc.text(`Dictée: ${d.pct||0}% (${d.ok||0}/${d.total||0}) · Quiz: ${q.correct||0}/8 · Redacció: ${r.wc||0} paraules`,38,y);
+      y+=14;
+
+      doc.setFont('helvetica','bold'); doc.setTextColor(184,90,110); doc.setFontSize(11);
+      doc.text('Redacció:',38,y); y+=14;
+
+      doc.setFont('helvetica','normal'); doc.setTextColor(26,29,36); doc.setFontSize(10.5);
+      const red=(r.text||'').trim() || '(Sense text)';
+      const lines=doc.splitTextToSize(red, W-76);
+      for(const line of lines){
+        if(y>H-60){ doc.addPage(); y=54; }
+        doc.text(line,38,y); y+=14;
+      }
+      y+=10;
+      if(y>H-90){ doc.addPage(); y=54; }
+    }
+
+    doc.setFontSize(8); doc.setTextColor(160,160,170);
+    doc.text('Generat automàticament — FLE Pack PRO (Mode iniciació FIX)',38,H-22);
+
+    const safe=(name+'_'+group).replace(/[^a-zA-Z0-9_-]/g,'_').replace(/_+/g,'_');
+    doc.save(`FLE_PACK_PRO_INICIACIO_FIX_${safe}.pdf`);
+
+    document.getElementById('pdfFb').textContent='✅ PDF descarregat.';
+    addXP(10);
+  }
+
+  // Badges UI
+  function renderBadges(){
+    document.getElementById('hudBadges').textContent=(state.badges||[]).length;
+    const grid=document.getElementById('badgeGrid');
+    grid.innerHTML='';
+    for(const b of BADGES){
+      const owned=(state.badges||[]).includes(b.key);
+      const c=document.createElement('div');
+      c.className='bCard'+(owned?'':' locked');
+      c.innerHTML = `
+        <div style="font-size:1.6rem">${b.emoji}</div>
+        <div class="bName">${b.name}</div>
+        <div class="bSmall">${b.desc}</div>
+        <div class="bSmall" style="margin-top:6px;font-weight:900;color:${owned?'var(--sage)':'var(--muted)'}">${owned?'Desbloquejada':'Bloquejada'}</div>
+      `;
+      grid.appendChild(c);
+    }
+  }
+
+  // Modals
+  function openBadges(){ renderBadges(); document.getElementById('badgesBack').style.display='flex'; }
+  function closeBadges(){ document.getElementById('badgesBack').style.display='none'; }
+  function openFinal(){ document.getElementById('stuName').value=state.student?.name||''; document.getElementById('stuGroup').value=state.student?.group||''; updateSummary(); document.getElementById('finalBack').style.display='flex'; }
+  function closeFinal(){ document.getElementById('finalBack').style.display='none'; }
+
+  function updateSummary(){
+    const lines=[];
+    lines.push(`XP global: <b>${state.xp||0}</b> · Nivell: <b>${state.level||1}</b> · Insígnies: <b>${(state.badges||[]).length}</b>`);
+    for(const k of THEME_ORDER){
+      const t=THEMES[k];
+      const d=state.perTheme[k].dictee;
+      const q=state.perTheme[k].quiz;
+      const r=state.perTheme[k].redac;
+      lines.push(`<div style="margin-top:6px"><b>${t.name}</b> — Dictée: ${d.pct||0}% · Quiz: ${q.correct||0}/8 · Redacció: ${r.wc||0} paraules</div>`);
+    }
+    document.getElementById('summary').innerHTML=lines.join('');
+  }
+
+  function updateStartScreen(){
+    const contBtn=document.getElementById('continueBtn');
+    const resumeInfo=document.getElementById('resumeInfo');
+    const canContinue=state.started && (state.student?.name||'').trim() && (state.student?.group||'').trim();
+    contBtn.style.display = canContinue ? 'inline-flex' : 'none';
+    resumeInfo.innerHTML = canContinue ? `Tens un progrés guardat: <b>${doneCount()}/3</b>. Últim tema: <b>${THEMES[state.theme].name}</b>.` : '';
+  }
+
+  function checkStartButton(){
+    const nm=(document.getElementById('startName').value||'').trim();
+    const gr=(document.getElementById('startGroup').value||'').trim();
+    document.getElementById('startBtn').disabled = !(nm && gr);
+  }
+
+  function enterApp(resume=false){
+    document.getElementById('start').style.display='none';
+    document.getElementById('app').style.display='block';
+    state.started=true;
+    if(!THEMES[state.theme]) state.theme='famille';
+    buildThemeMenu();
+    renderTheme();
+    updateHUD();
+    updateProgressUI();
+    renderBadges();
+    updateUnlocks();
+    if(!resume){ addXP(1); sfx('good'); }
+    save();
+  }
+
+  function saveAndExit(){
+    save();
+    document.getElementById('app').style.display='none';
+    document.getElementById('start').style.display='flex';
+    toast('💾 Guardat. Pots tornar un altre dia i prémer «Continua».');
+    updateStartScreen();
+  }
+
+  // ===================
+  // EVENTS
+  // ===================
+  document.getElementById('startName').addEventListener('input', ()=>{checkStartButton(); updateStartScreen();});
+  document.getElementById('startGroup').addEventListener('input', ()=>{checkStartButton(); updateStartScreen();});
+
+  document.getElementById('startBtn').addEventListener('click', ()=>{
+    const nm=(document.getElementById('startName').value||'').trim();
+    const gr=(document.getElementById('startGroup').value||'').trim();
+    if(!nm || !gr){ toast('Escriu el teu nom i el teu grup.'); return; }
+    state.student.name=nm; state.student.group=gr;
+    state.theme='famille';
+    save();
+    enterApp(false);
+  });
+
+  document.getElementById('continueBtn').addEventListener('click', ()=>enterApp(true));
+  document.getElementById('resetBtn').addEventListener('click', resetAll);
+  document.getElementById('saveExit').addEventListener('click', saveAndExit);
+
+  document.getElementById('soundToggle').addEventListener('change', (e)=>{ state.sound=e.target.checked; save(); });
+  document.getElementById('motionToggle').addEventListener('change', (e)=>{ state.motion=e.target.checked; save(); });
+
+  document.getElementById('dicteeCheck').addEventListener('click', checkDictee);
+  document.getElementById('dicteeNew').addEventListener('click', ()=>{ buildDictee(true); save(); });
+
+  document.getElementById('quizHint').addEventListener('click', quizHint);
+  document.getElementById('quizNext').addEventListener('click', quizNext);
+  document.getElementById('quizRebuild').addEventListener('click', rebuildQuiz);
+
+  document.getElementById('openBadges').addEventListener('click', openBadges);
+  document.getElementById('closeBadges').addEventListener('click', closeBadges);
+  document.getElementById('badgesBack').addEventListener('click', (e)=>{ if(e.target.id==='badgesBack') closeBadges(); });
+
+  document.getElementById('closeFinal').addEventListener('click', closeFinal);
+  document.getElementById('finalBack').addEventListener('click', (e)=>{ if(e.target.id==='finalBack') closeFinal(); });
+
+  document.getElementById('makePdf').addEventListener('click', generatePdf);
+  document.getElementById('resetAll').addEventListener('click', resetAll);
+
+  document.getElementById('toggleHelp').addEventListener('click', ()=>{
+    const box=document.getElementById('helpBox');
+    const btn=document.getElementById('toggleHelp');
+    const collapsed = box.getAttribute('data-collapsed')==='1';
+    if(!collapsed){
+      box.setAttribute('data-collapsed','1');
+      [...box.children].forEach((ch,i)=>{ if(i>0) ch.style.display='none'; });
+      btn.textContent='Mostra ajuda';
+    }else{
+      box.setAttribute('data-collapsed','0');
+      [...box.children].forEach((ch,i)=>{ if(i>0) ch.style.display=''; });
+      btn.textContent='Amaga ajuda';
+    }
+  });
+
+  document.getElementById('redacText').addEventListener('input', ()=>evaluateWriting(false));
+
+  // INIT
+  load();
+  document.getElementById('soundToggle').checked=!!state.sound;
+  document.getElementById('motionToggle').checked=!!state.motion;
+  document.getElementById('startName').value=(state.student?.name||'');
+  document.getElementById('startGroup').value=(state.student?.group||'');
+  checkStartButton();
+  updateStartScreen();
+
+</script>
+</body>
+</html>
